@@ -35,6 +35,7 @@ src/
   index.ts               # Angular NgModule + plugin bootstrap (module class)
   config.ts              # ConfigProvider: default settings + hotkey defaults
   hotkeys.ts             # HotkeyProvider: declares hotkey ids
+  settings.ts            # SettingsTabProvider + settings UI component
   services/
     clipsnag.service.ts  # Global service: owns the hotkey$ subscription, tab registry,
                          # start/stop orchestration, clipboard write, notifications
@@ -43,6 +44,11 @@ src/
   decorator/
     clipsnag.decorator.ts# TerminalDecorator: attaches a recorder to each terminal tab
 ```
+
+Plugin settings are editable in the Tabby UI via `ClipsnagSettingsTabProvider`
+(`src/settings.ts`); the settings component MUST be listed in the module's
+`declarations` (not just `providers`), with `FormsModule` and `TabbyCoreModule`
+imported, since Tabby instantiates it through `ComponentFactoryResolver`.
 
 ### Why both a decorator *and* middleware?
 

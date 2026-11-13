@@ -14,7 +14,7 @@ export interface ClipsnagConfig {
     autoStopAfterIdleMs: number
     /** Copy the cleaned capture to the system clipboard when recording stops. */
     copyToClipboardOnStop: boolean
-    /** Reserved: tear down capture when the user switches away from the tab. */
+    /** Stop and copy the capture as soon as the user switches away from the tab. */
     stopOnTabSwitch: boolean
 }
 

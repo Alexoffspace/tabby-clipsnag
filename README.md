@@ -1,5 +1,7 @@
 # tabby-clipsnag
 
+English | [Русский](README_ru.md)
+
 A [Tabby](https://tabby.sh) terminal plugin. Press a hotkey, let a noisy command run,
 press it again — the plugin strips the ANSI control garbage and drops clean text on your
 clipboard.
@@ -17,14 +19,17 @@ and it works the same whether the output scrolled off screen or not.
   colour codes, cursor movement, OSC titles, and hyperlinks never leak into the clipboard.
 - **Bounded memory** — capture stops growing at a configurable cap (default **5 MB**),
   keeping the earliest bytes and reporting truncation in the notification.
-- **Auto-stop on idle** — optionally stop by itself after N ms of silence (default 3000 ms).
+- **Auto-stop on idle** — optionally stop by itself after N seconds of silence (default 3 s).
+- **Settings UI** — every option is editable under **Settings → Clipsnag**; nothing to hand-edit.
 - **Leak-safe** — everything is torn down with the tab; closing a recorded tab cancels the
   recording cleanly with no dangling subscriptions.
 
 ## Configuration
 
-All settings live under the `clipsnag` key in `~/.config/tabby/config.yaml`
-(`%APPDATA%\tabby\config.yaml` on Windows):
+Everything is editable in **Settings → Clipsnag** (the hotkey lives under
+**Settings → Hotkeys → Toggle terminal output snagging**). The same values are stored under
+the `clipsnag` key in `~/.config/tabby/config.yaml` (`%APPDATA%\tabby\config.yaml` on Windows)
+and can be hand-edited there, though the settings UI is the recommended way:
 
 ```yaml
 hotkeys:
@@ -34,10 +39,8 @@ clipsnag:
   maxCaptureBytes: 5242880        # 5 MB hard cap; older bytes kept, rest discarded
   autoStopAfterIdleMs: 3000       # stop after 3s of silence; 0 disables auto-stop
   copyToClipboardOnStop: true     # write the cleaned text to the OS clipboard
-  stopOnTabSwitch: false          # reserved
+  stopOnTabSwitch: false          # stop + copy as soon as you switch away from the tab
 ```
-
-The hotkey can also be changed in **Settings → Hotkeys → Toggle terminal output snagging**.
 
 ## How it works
 
@@ -118,4 +121,4 @@ also just wait: recording ends automatically once output goes quiet.
 
 ## License
 
-MIT
+MIT © Alexey Belov — see [LICENSE](LICENSE).

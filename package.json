@@ -1,6 +1,6 @@
 {
   "name": "tabby-clipsnag",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Tabby plugin: hotkey-driven terminal output capture that strips ANSI and copies clean text to the clipboard",
   "keywords": [
     "tabby-plugin",
@@ -14,7 +14,9 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "README_ru.md",
+    "LICENSE"
   ],
   "author": "alexoffspace",
   "license": "MIT",

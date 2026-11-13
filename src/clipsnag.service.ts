@@ -98,6 +98,13 @@ export class ClipsnagService {
 
     /** Begin capturing the active terminal tab's output. */
     startRecording (): void {
+        // Invariant: at most one recording at a time. A second start (e.g. a
+        // direct call bypassing `toggle()`) would otherwise overwrite `this.active`
+        // and leak the previous middleware inside the old tab's session stack.
+        if (this.active) {
+            this.abortRecording('a new recording started')
+        }
+
         const terminal = this.resolveActiveTerminal()
         if (!terminal) {
             this.notifications.notice('Clipsnag: no active terminal to record')
@@ -161,6 +168,21 @@ export class ClipsnagService {
                 }
             }),
         )
+
+        if (settings.stopOnTabSwitch) {
+            subscriptions.add(
+                this.app.activeTabChange$.subscribe(tab => {
+                    // Resolve the focused pane of a split tab so switching between
+                    // panes of the same split does not end the recording.
+                    const focused = tab instanceof SplitTabComponent ? tab.getFocusedTab() : tab
+                    if (focused !== terminal) {
+                        this.zone.run(() => {
+                            void this.stopRecording(true)
+                        })
+                    }
+                }),
+            )
+        }
 
         this.active = { terminal, buffer, recorder, idleStop$, subscriptions }
         this.notifications.info(

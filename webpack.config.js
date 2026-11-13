@@ -46,6 +46,7 @@ module.exports = {
         // Angular + rxjs are singletons inside the host app.
         '@angular/core': 'commonjs2 @angular/core',
         '@angular/common': 'commonjs2 @angular/common',
+        '@angular/forms': 'commonjs2 @angular/forms',
         '@angular/platform-browser': 'commonjs2 @angular/platform-browser',
         '@ng-bootstrap/ng-bootstrap': 'commonjs2 @ng-bootstrap/ng-bootstrap',
         'rxjs': 'commonjs2 rxjs',
