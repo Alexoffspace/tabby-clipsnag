@@ -1,0 +1,62 @@
+{
+  "name": "tabby-clipsnag",
+  "version": "0.1.0",
+  "description": "Tabby plugin: hotkey-driven terminal output capture that strips ANSI and copies clean text to the clipboard",
+  "keywords": [
+    "tabby-plugin",
+    "tabby",
+    "terminus",
+    "clipboard",
+    "ansi",
+    "terminal"
+  ],
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "author": "alexoffspace",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexoffspace/tabby-clipsnag.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "strip-ansi": "^7.1.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^15",
+    "@angular/core": "^15",
+    "@angular/platform-browser": "^15",
+    "rxjs": "^7",
+    "tabby-core": "*",
+    "tabby-terminal": "*"
+  },
+  "devDependencies": {
+    "@angular/common": "^15.2.10",
+    "@angular/compiler": "^15.2.10",
+    "@angular/compiler-cli": "^15.2.10",
+    "@angular/core": "^15.2.10",
+    "@angular/platform-browser": "^15.2.10",
+    "@types/node": "^20.14.9",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
+    "eslint": "^8.57.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "~4.9.5",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
