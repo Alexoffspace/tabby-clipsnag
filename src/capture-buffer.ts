@@ -1,18 +1,23 @@
-import stripAnsi from 'strip-ansi'
+import { stripTerminalControlsInPlace } from './strip-terminal-controls'
 
 /**
  * One in-flight recording for a single terminal tab.
  *
  * Bytes are accumulated raw (never decoded per chunk) so that multi-byte UTF-8
- * characters split across chunk boundaries survive. Decoding and ANSI stripping
- * both happen exactly once, in `finish()`.
+ * characters split across chunk boundaries survive. Terminal control sequences
+ * are stripped in place and the buffer is decoded to a string exactly once, in
+ * `finish()`.
  */
 export class CaptureBuffer {
     private readonly chunks: Buffer[] = []
     private capturedBytes = 0
     private truncated = false
 
-    constructor (private readonly maxBytes: number) {}
+    constructor (private readonly maxBytes: number) {
+        if (!Number.isSafeInteger(maxBytes) || maxBytes < 0) {
+            throw new RangeError('maxBytes must be a non-negative safe integer')
+        }
+    }
 
     /** Bytes retained so far (always <= maxBytes). */
     get byteLength (): number {
@@ -26,35 +31,35 @@ export class CaptureBuffer {
 
     /**
      * Append a chunk. Chunks past the cap are dropped and the buffer is marked
-     * truncated; we never exceed `maxBytes` of retained memory.
+     * truncated; we never exceed `maxBytes` of retained memory. A private copy
+     * is stored so the producer cannot mutate captured data through a shared
+     * Buffer reference.
      */
     append (data: Buffer): void {
         if (data.length === 0) {
             return
         }
+
         const remaining = this.maxBytes - this.capturedBytes
-        if (remaining <= 0) {
-            this.truncated = true
-            return
+        const accepted = remaining > 0 ? Math.min(data.length, remaining) : 0
+
+        if (accepted > 0) {
+            this.chunks.push(Buffer.from(data.subarray(0, accepted)))
+            this.capturedBytes += accepted
         }
-        if (data.length > remaining) {
-            this.chunks.push(data.subarray(0, remaining))
-            this.capturedBytes += remaining
+
+        if (accepted < data.length) {
             this.truncated = true
-            return
         }
-        this.chunks.push(data)
-        this.capturedBytes += data.length
     }
 
     /**
-     * Decode, strip ANSI control sequences, and normalise line endings.
-     * Callable once per recording; it does not clear the buffer.
+     * Strip terminal control sequences and decode the capture to a string.
+     * Callable more than once per recording; it does not clear the buffer.
      */
     finish (): string {
-        const raw = Buffer.concat(this.chunks, this.capturedBytes).toString('utf8')
-        const stripped = stripAnsi(raw)
-        return stripped.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+        const raw = Buffer.concat(this.chunks, this.capturedBytes)
+        return stripTerminalControlsInPlace(raw).toString('utf8')
     }
 
     /** Drop all retained data (used when a recording is abandoned). */

@@ -1,4 +1,4 @@
-# AGENTS.md
+﻿# AGENTS.md
 
 Guidance for AI agents (and humans) working in this repository.
 
@@ -66,9 +66,9 @@ recorded". Only one recording is active at a time; starting a new one stops the 
 
 ```
 PTY/session --bytes--> session.middleware stack
-                          └─ CaptureMiddleware.feedFromSession(data)
-                                 ├─ if recording: push data into the active recorder
-                                 └─ always: forward to next middleware / terminal
+                          в””в”Ђ CaptureMiddleware.feedFromSession(data)
+                                 в”њв”Ђ if recording: push data into the active recorder
+                                 в””в”Ђ always: forward to next middleware / terminal
 ```
 
 The recorder accumulates **bytes** (not decoded strings) so multi-byte UTF-8 sequences
@@ -76,7 +76,7 @@ split across chunks are handled correctly; decoding happens once, at stop time.
 
 ## Hard invariants (do not regress)
 
-- ANSI stripping happens **once, on stop**, over the whole buffer — never per chunk
+- ANSI stripping happens **once, on stop**, over the whole buffer вЂ” never per chunk
   (per-chunk stripping breaks sequences that straddle chunk boundaries).
 - Clipboard is written via `PlatformService.setClipboard`, never via `navigator.clipboard`.
 - Recording state is per-tab; switching tabs does not silently stop recording, but
@@ -114,11 +114,11 @@ On Windows the plugins live under `%APPDATA%\tabby\plugins\node_modules\`.
 
 1. `npm run build` is green with zero TS errors.
 2. `npm run lint` (ESLint) is green.
-3. Manual: start recording, run `ls --color=always`, stop, paste into a text editor —
+3. Manual: start recording, run `ls --color=always`, stop, paste into a text editor вЂ”
    no `\x1b[...m` escapes remain.
-4. Manual: open a second tab during recording, close the recorded tab — no exception,
+4. Manual: open a second tab during recording, close the recorded tab вЂ” no exception,
    recording state resets, no leaked middleware.
-5. Manual: `yes` for a few seconds — capture truncates at the cap, notification says so.
+5. Manual: `yes` for a few seconds вЂ” capture truncates at the cap, notification says so.
 
 
 # SYSTEM ROLE & OPERATIONAL RULES
@@ -137,11 +137,11 @@ Never skip this block. Complete the analysis before calling file-editing tools o
 - **Strict Token Economy:** Maximize token efficiency. Output ONLY what is directly relevant to the task. Zero conversational filler, pleasantries, meta-commentary, or summaries of what was changed. Every word must carry technical payload.
 - **Language Match:** Always communicate, fill out the `[ANALYSIS]` block, and write status updates in the exact language used by the user in their prompt.
 - **Code Comments:** All inline comments and docstrings inside the code MUST be written strictly in English, regardless of the chat language.
-- **Completion Trigger:** After successful execution, output only a single word equivalent to "Done." or "Fixed." in the user's language (e.g., "Готово." / "Исправлено.").
+- **Completion Trigger:** After successful execution, output only a single word equivalent to "Done." or "Fixed." in the user's language (e.g., "Р“РѕС‚РѕРІРѕ." / "РСЃРїСЂР°РІР»РµРЅРѕ.").
 
 ### 3. Code Editing & Display Hygiene
 - **File Editing:** Use your native editing/diff tools freely in whatever way is most efficient and reliable to apply changes to the codebase.
-- **Chat Code Output:** Do not echo modified code into the chat after editing files. ONLY display code in the chat if the user explicitly asks to see it — and when asked, output only the relevant snippets or target functions wrapped in markdown code blocks, never the full file.
+- **Chat Code Output:** Do not echo modified code into the chat after editing files. ONLY display code in the chat if the user explicitly asks to see it вЂ” and when asked, output only the relevant snippets or target functions wrapped in markdown code blocks, never the full file.
 
 ### 4. Agent Memory Upkeep (AGENTS.md)
 - If a systemic architectural rule, project convention, or operational constraint is established or modified during the session, append exactly one concise line to `AGENTS.md`. Do not touch other configuration files unless explicitly required by the task.
@@ -149,3 +149,5 @@ Never skip this block. Complete the analysis before calling file-editing tools o
 ### 5. Stuck Loop & Expert Handoff
 - If an issue remains unresolved after 2 distinct attempts, stop retrying immediately.
 - Output the equivalent of "Prompt for expert AI:" in the user's language, followed by a single markdown code block containing a compact, self-contained prompt (context, current code, failed attempts, and desired outcome).
+- npm packaging contract: the "files" allowlist is restricted to "dist" + docs; "dist" must be built before publishing ("prepublishOnly" handles it) and every runtime import from "src" must have a matching "peerDependencies" entry (currently includes "@angular/forms").
+- ANSI stripping is a vendored byte-oriented state machine in `src/strip-terminal-controls.ts`, run before UTF-8 decoding inside `CaptureBuffer.finish()`; no external ANSI library (e.g. strip-ansi) may be reintroduced into the capture path.

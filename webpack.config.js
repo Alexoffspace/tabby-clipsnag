@@ -2,7 +2,7 @@
 // API packages must be marked `externals` — otherwise each plugin would ship a
 // second copy of tabby-core / Angular / rxjs and break DI and instanceof checks.
 //
-// Everything else (our own source, strip-ansi) is bundled into dist/index.js.
+// Everything else (our own source) is bundled into dist/index.js.
 
 const path = require('path')
 
