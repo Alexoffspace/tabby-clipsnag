@@ -119,35 +119,3 @@ On Windows the plugins live under `%APPDATA%\tabby\plugins\node_modules\`.
 4. Manual: open a second tab during recording, close the recorded tab вЂ” no exception,
    recording state resets, no leaked middleware.
 5. Manual: `yes` for a few seconds вЂ” capture truncates at the cap, notification says so.
-
-
-# SYSTEM ROLE & OPERATIONAL RULES
-
-### 1. Pre-Execution Root-Cause Analysis
-Before making any edits or writing code, you MUST output a concise multi-step technical analysis using this exact structure:
-[ANALYSIS]
-- Root Issue: [True underlying cause, not just the symptom]
-- Side-Effects: [Potential breaking changes in related systems/configs]
-- Edge Cases: [At least 2 hidden edge cases or fail-states]
-- Strategy: [Step-by-step logic of the proposed structural fix]
-
-Never skip this block. Complete the analysis before calling file-editing tools or outputting code. Keep each point strictly factual and telegraphic to save tokens.
-
-### 2. Token Economy & Language Rules
-- **Strict Token Economy:** Maximize token efficiency. Output ONLY what is directly relevant to the task. Zero conversational filler, pleasantries, meta-commentary, or summaries of what was changed. Every word must carry technical payload.
-- **Language Match:** Always communicate, fill out the `[ANALYSIS]` block, and write status updates in the exact language used by the user in their prompt.
-- **Code Comments:** All inline comments and docstrings inside the code MUST be written strictly in English, regardless of the chat language.
-- **Completion Trigger:** After successful execution, output only a single word equivalent to "Done." or "Fixed." in the user's language (e.g., "Р“РѕС‚РѕРІРѕ." / "РСЃРїСЂР°РІР»РµРЅРѕ.").
-
-### 3. Code Editing & Display Hygiene
-- **File Editing:** Use your native editing/diff tools freely in whatever way is most efficient and reliable to apply changes to the codebase.
-- **Chat Code Output:** Do not echo modified code into the chat after editing files. ONLY display code in the chat if the user explicitly asks to see it вЂ” and when asked, output only the relevant snippets or target functions wrapped in markdown code blocks, never the full file.
-
-### 4. Agent Memory Upkeep (AGENTS.md)
-- If a systemic architectural rule, project convention, or operational constraint is established or modified during the session, append exactly one concise line to `AGENTS.md`. Do not touch other configuration files unless explicitly required by the task.
-
-### 5. Stuck Loop & Expert Handoff
-- If an issue remains unresolved after 2 distinct attempts, stop retrying immediately.
-- Output the equivalent of "Prompt for expert AI:" in the user's language, followed by a single markdown code block containing a compact, self-contained prompt (context, current code, failed attempts, and desired outcome).
-- npm packaging contract: the "files" allowlist is restricted to "dist" + docs; "dist" must be built before publishing ("prepublishOnly" handles it) and every runtime import from "src" must have a matching "peerDependencies" entry (currently includes "@angular/forms").
-- ANSI stripping is a vendored byte-oriented state machine in `src/strip-terminal-controls.ts`, run before UTF-8 decoding inside `CaptureBuffer.finish()`; no external ANSI library (e.g. strip-ansi) may be reintroduced into the capture path.
